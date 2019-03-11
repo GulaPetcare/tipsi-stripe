@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 import {
   requireNativeComponent,
   findNodeHandle,
@@ -6,39 +6,38 @@ import {
   View,
   TouchableWithoutFeedback,
   ViewPropTypes,
-  Platform,
-} from 'react-native'
-import PropTypes from 'prop-types'
-import StyleSheetPropType from 'react-native/Libraries/StyleSheet/StyleSheetPropType'
-import ViewStylePropTypes from 'react-native/Libraries/Components/View/ViewStylePropTypes'
-import TextInputState from 'react-native/Libraries/Components/TextInput/TextInputState'
+  Platform
+} from "react-native";
+import PropTypes from "prop-types";
+import TextInputState from "react-native/Libraries/Components/TextInput/TextInputState";
 
-const FieldStylePropType = {
-  ...ViewStylePropTypes,
-  color: PropTypes.string,
-}
+const FieldStylePropType = ViewPropTypes.style;
 
-const NativePaymentCardTextField = requireNativeComponent('TPSCardField', PaymentCardTextField, {
-  nativeOnly: {
-    borderColor: true,
-    borderWidth: true,
-    cornerRadius: true,
-    textColor: true,
-    fontFamily: true,
-    fontWeight: true,
-    fontStyle: true,
-    fontSize: true,
-    enabled: true,
-    onChange: true,
-    params: true, // Currently iOS only
-    keyboardAppearance: true, // iOS only
-  },
-})
+const NativePaymentCardTextField = requireNativeComponent(
+  "TPSCardField",
+  PaymentCardTextField,
+  {
+    nativeOnly: {
+      borderColor: true,
+      borderWidth: true,
+      cornerRadius: true,
+      textColor: true,
+      fontFamily: true,
+      fontWeight: true,
+      fontStyle: true,
+      fontSize: true,
+      enabled: true,
+      onChange: true,
+      params: true, // Currently iOS only
+      keyboardAppearance: true // iOS only
+    }
+  }
+);
 
 export default class PaymentCardTextField extends Component {
   static propTypes = {
     ...ViewPropTypes,
-    style: StyleSheetPropType(FieldStylePropType), // eslint-disable-line new-cap
+    style: FieldStylePropType,
 
     // Common
     expirationPlaceholder: PropTypes.string,
@@ -52,76 +51,76 @@ export default class PaymentCardTextField extends Component {
         cursorColor: PropTypes.string,
         textErrorColor: PropTypes.string,
         placeholderColor: PropTypes.string,
-        keyboardAppearance: PropTypes.oneOf(['default', 'light', 'dark']),
+        keyboardAppearance: PropTypes.oneOf(["default", "light", "dark"])
       },
       android: {
         setEnabled: PropTypes.bool,
         backgroundColor: PropTypes.string,
         cardNumber: PropTypes.string,
         expDate: PropTypes.string,
-        securityCode: PropTypes.string,
-      },
-    }),
-  }
+        securityCode: PropTypes.string
+      }
+    })
+  };
 
   static defaultProps = {
-    ...View.defaultProps,
-  }
+    ...View.defaultProps
+  };
 
-  valid = false // eslint-disable-line react/sort-comp
+  valid = false; // eslint-disable-line react/sort-comp
   params = {
-    number: '',
+    number: "",
     expMonth: 0,
     expYear: 0,
-    cvc: '',
-  }
+    cvc: ""
+  };
 
   componentWillUnmount() {
     if (this.isFocused()) {
-      this.blur()
+      this.blur();
     }
   }
 
-  isFocused = () => (
-    TextInputState.currentlyFocusedField() === findNodeHandle(this.cardTextFieldRef)
-  )
+  isFocused = () =>
+    TextInputState.currentlyFocusedField() ===
+    findNodeHandle(this.cardTextFieldRef);
 
   focus = () => {
-    TextInputState.focusTextInput(findNodeHandle(this.cardTextFieldRef))
-  }
+    TextInputState.focusTextInput(findNodeHandle(this.cardTextFieldRef));
+  };
 
   blur = () => {
-    TextInputState.blurTextInput(findNodeHandle(this.cardTextFieldRef))
-  }
+    TextInputState.blurTextInput(findNodeHandle(this.cardTextFieldRef));
+  };
 
   handlePress = () => {
-    this.focus()
-  }
+    this.focus();
+  };
 
-  handleChange = (event) => {
-    const { onChange, onParamsChange } = this.props
-    const { nativeEvent } = event
+  handleChange = event => {
+    const { onChange, onParamsChange } = this.props;
+    const { nativeEvent } = event;
 
-    this.valid = nativeEvent.valid
-    this.params = nativeEvent.params
+    this.valid = nativeEvent.valid;
+    this.params = nativeEvent.params;
 
     if (onChange) {
-      onChange(event)
+      onChange(event);
     }
 
     if (onParamsChange) {
-      onParamsChange(nativeEvent.valid, nativeEvent.params)
+      onParamsChange(nativeEvent.valid, nativeEvent.params);
     }
-  }
+  };
 
-  setCardTextFieldRef = (node) => {
-    this.cardTextFieldRef = node
-  }
+  setCardTextFieldRef = node => {
+    this.cardTextFieldRef = node;
+  };
 
   // Previously on iOS only
-  setParams = (params) => {
-    this.cardTextFieldRef.setNativeProps({ params })
-  }
+  setParams = params => {
+    this.cardTextFieldRef.setNativeProps({ params });
+  };
 
   render() {
     const {
@@ -138,7 +137,7 @@ export default class PaymentCardTextField extends Component {
       cvcPlaceholder,
       keyboardAppearance,
       ...rest
-    } = this.props
+    } = this.props;
 
     const {
       borderColor,
@@ -152,19 +151,19 @@ export default class PaymentCardTextField extends Component {
       backgroundColor,
       color,
       ...fieldStyles
-    } = StyleSheet.flatten(style)
+    } = StyleSheet.flatten(style);
 
     const viewStyles = {
       overflow,
-      width: fieldStyles.width,
-    }
+      width: fieldStyles.width
+    };
 
     const commonStyles = {
       borderColor,
       borderWidth,
       borderRadius,
-      backgroundColor,
-    }
+      backgroundColor
+    };
 
     return (
       <View style={[commonStyles, viewStyles]}>
@@ -174,7 +173,8 @@ export default class PaymentCardTextField extends Component {
           onPress={this.handlePress}
           accessible={rest.accessible}
           accessibilityLabel={rest.accessibilityLabel}
-          accessibilityTraits={rest.accessibilityTraits}>
+          accessibilityTraits={rest.accessibilityTraits}
+        >
           <NativePaymentCardTextField
             ref={this.setCardTextFieldRef}
             style={[styles.field, fieldStyles]}
@@ -191,13 +191,11 @@ export default class PaymentCardTextField extends Component {
             expirationPlaceholder={expirationPlaceholder}
             cvcPlaceholder={cvcPlaceholder}
             onChange={this.handleChange}
-
             // iOS only
             cursorColor={cursorColor}
             textErrorColor={textErrorColor}
             placeholderColor={placeholderColor}
             keyboardAppearance={keyboardAppearance}
-
             // Android only
             cardNumber={cardNumber}
             expDate={expDate}
@@ -205,7 +203,7 @@ export default class PaymentCardTextField extends Component {
           />
         </TouchableWithoutFeedback>
       </View>
-    )
+    );
   }
 }
 
@@ -214,7 +212,6 @@ const styles = StyleSheet.create({
     // The field will conform to whatever width is given, but we do
     // have to set the component's height explicitly on the
     // surrounding view to ensure it gets rendered.
-    height: 44,
-  },
-})
-
+    height: 44
+  }
+});
