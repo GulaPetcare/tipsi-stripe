@@ -232,8 +232,7 @@ public class StripeModule extends ReactContextBaseJavaModule {
             options.getInt("amount"),
             options.getString("name"),
             options.getString("returnURL"),
-            getStringOrNull(options, "statementDescriptor"),
-	          options.getString("preferredLanguage"));
+            getStringOrNull(options, "statementDescriptor"));
         break;
       case "giropay":
         sourceParams = SourceParams.createGiropayParams(
